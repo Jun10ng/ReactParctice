@@ -1,0 +1,29 @@
+.trigger {
+  padding: 0 24px;
+  font-size: 18px;
+  line-height: 64px;
+  cursor: pointer;
+  transition: color 0.3s;
+  margin-right: auto;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+.logo {
+  height: 32px;
+  margin: 16px;
+  /* background:#1890ff; */
+  color: #fff;
+  font-size: 20px;
+}
+
+.site-layout .site-layout-background {
+  background: #fff;
+
+}
+
+#root,.ant-layout{
+  height: 100%;
+}
