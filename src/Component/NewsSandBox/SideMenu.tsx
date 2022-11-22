@@ -82,7 +82,7 @@ function SideMenu({cstore}:{cstore:TodoStore}){
       .then(res=>{
         menuItems = res.data as Array<MenuItem>
         setItemTypeList(ConvMenuItem2ItemType(menuItems))
-        console.log("=====")
+        // console.log("=====")
       })
   },[])
   // console.log(props)

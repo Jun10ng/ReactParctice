@@ -58,7 +58,7 @@ export default function NewsSandBox() {
   useEffect(() => {
     TokenValidte() ? "" : ug("/login");
   });
-  console.log(store);
+  // console.log(store);
   
   return (
     // <Provider {...stores}>

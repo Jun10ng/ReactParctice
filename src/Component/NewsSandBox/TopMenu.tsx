@@ -14,12 +14,12 @@ function TopMenu({cstore}:{cstore:TodoStore}) {
   const { Header } = Layout;
   // const [collapsed, setCollapsed] = useState(false);
   // let collapsed = todoStore.collapsed.
-  console.log(cstore);
+  // console.log(cstore);
   
 
   const handleOnCollasped = () => {
     cstore.setCollasped(!cstore.collasped)
-    console.log(cstore.collasped)
+    // console.log(cstore.collasped)
   };
 
   const items = [
