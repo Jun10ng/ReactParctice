@@ -313,8 +313,8 @@
       "id": 1,
       "title": "首页",
       "key": "/home",
-      "pagepermisson": 1,
-      "grade": 1
+      "grade": 1,
+      "pagepermisson": 1
     },
     {
       "id": 2,

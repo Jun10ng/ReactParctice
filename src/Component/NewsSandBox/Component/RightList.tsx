@@ -1,4 +1,4 @@
-import { Button, Modal, Table, Tag } from "antd";
+import { Button, Modal, Popover, Switch, Table, Tag } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import type { ColumnsType } from "antd/es/table";
@@ -8,14 +8,14 @@ import {
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 
-interface Right {
+export interface Right {
   id: number;
   title: string;
   key: string;
   pagepermisson: number;
   grade: number;
   children: any;
-  rightId:number
+  rightId: number;
 }
 
 export default function RightList() {
@@ -50,26 +50,42 @@ export default function RightList() {
       });
     }, 500);
   };
+
   const deleteMethod = (item: Right) => {
     // 删除当前页面 再删除后端的
     if (item.grade === 1) {
       setDataSource(dataSource.filter((data) => data.id !== item.id));
+      axios.delete(`http://localhost:8000/rights/${item.id}`);
     } else if (item.grade === 2) {
-      let ds = dataSource.slice(); 
-      ds.forEach((val: Right,idx:number) => {
+      let ds = dataSource.slice();
+      ds.forEach((val: Right, idx: number) => {
         if (val.id === item.rightId) {
           ds[idx].children = val.children.filter(
             (data: any) => data.id !== item.id
           );
         }
       });
-      setDataSource(ds)
-
+      axios.delete(`http://localhost:8000/children/${item.id}`);
+      setDataSource(ds);
     }
   };
-  // axios.delete(`http://localhost:8000/rights/${item.id}`)
 
-  const columns: ColumnsType<any> = [
+  function handleCheck(item: Right) {
+    item.pagepermisson = item.pagepermisson===1?0:1
+    // console.log(item);
+    if (item.grade===1){
+      axios.patch(`http://localhost:8000/rights/${item.id}`,{
+        pagepermisson:item.pagepermisson
+      })
+    }else{
+      axios.patch(`http://localhost:8000/children/${item.id}`,{
+        pagepermisson:item.pagepermisson
+      })
+    }
+    setDataSource([...dataSource])
+  }
+
+  const columns: ColumnsType<Right> = [
     {
       title: "ID",
       dataIndex: "id",
@@ -93,7 +109,30 @@ export default function RightList() {
       render: (item) => {
         return (
           <div>
-            <Button type="primary" shape="circle" icon={<EditOutlined />} />
+            {/* 编辑键 */}
+            <Popover
+              content={
+                <Switch
+                  checkedChildren="开启"
+                  unCheckedChildren="关闭"
+                  checked={item.pagepermisson}
+                  onClick={() => {
+                    handleCheck(item);
+                  }}
+                />
+              }
+              title="配置项"
+              trigger={item.pagepermisson === undefined ? "" : "click"}
+            >
+              <Button
+                disabled={item.pagepermisson === undefined}
+                onClick={() => {}}
+                type="primary"
+                shape="circle"
+                icon={<EditOutlined />}
+              />
+            </Popover>
+            {/* 删除键 */}
             <Button
               onClick={() => {
                 handleOnDelete(item);
@@ -107,11 +146,7 @@ export default function RightList() {
       },
     },
   ];
-  // console.log(dataSource)
-  // let ds:Array<any> = dataSource.slice()
-  // console.log(ds)
-  // ds[0].children = null
-  // console.log(ds)
+
   return (
     <Table
       dataSource={dataSource}
