@@ -21,7 +21,9 @@ export default function RoleList() {
   const [dataSource, setDataSource] = useState(Array<Role>);
   const [rightList, setRightList] = useState(Array<Right>)
   const [currentRight, setCurrentRight] = useState(Array<any>)
-  const [isModalOpen, setIsModalOpen] = useState(false); //控制权限modal是否展示
+  const [currentId, setCurrentId] = useState(-1)
+  const [isModalOpen, setIsModalOpen] = useState(false); //image.png控制权限modal是否展示
+  
 
   const columns: ColumnsType<Role> = [
     {
@@ -55,6 +57,7 @@ export default function RoleList() {
                 // console.log(item.rights)
                 setCurrentRight(item.rights)
                 showModal();
+                setCurrentId(item.id)
               }}
               type="primary"
               shape="circle"
@@ -116,6 +119,21 @@ export default function RoleList() {
   const handleOk = () => {
     // console.log("handleOk")
     setIsModalOpen(false);
+    // 同步dataSource
+    setDataSource(dataSource.map(item=>{
+      if (item.id===currentId){
+        return {
+          ...item,
+          rights:currentRight,
+        }
+      }
+      return item
+    }))
+    // put会后端接口 
+    axios.patch(`http://localhost:8000/roles/${currentId}`,{
+      rights:currentRight
+    })
+
   };
   const handleCancel = () => {
     // console.log("handleCancel")
