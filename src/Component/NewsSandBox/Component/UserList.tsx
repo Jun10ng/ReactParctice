@@ -46,27 +46,31 @@ export interface RoleType {
 }
 
 class fr {
-  setOpen = function setOpen(x:boolean) {
+  setOpen = function setOpen(x: boolean) {
     // useless
-  }
-  setCurrentUser = function setOpen(x:User) {
+  };
+  setCurrentUser = function setOpen(x: User) {
     // useless
-  }
+  };
 }
 // 添加用户
 export default function UserList() {
   const [dataSource, setDataSource] = useState(Array<User>);
   const [regionList, setRegionList] = useState(Array<Region>);
-  const [currentUser, setCurrentUser] = useState(new class{id!: number;})
-  const formRef = useRef(new(fr)); // 连接跳出的表框
-  const upfateFormRef = useRef(new(fr)); // 连接跳出的表框
+  const [currentUser, setCurrentUser] = useState(
+    new (class {
+      id!: number;
+    })()
+  );
+  const formRef = useRef(new fr()); // 连接跳出的表框
+  const upfateFormRef = useRef(new fr()); // 连接跳出的表框
   // const [roleTypeList, setRoleTypeList] = useState(Array<>)
 
   useEffect(() => {
     axios.get(`http://127.0.0.1:8000/users`).then((res) => {
       setDataSource(res.data as Array<User>);
     });
-  // }, [dataSource]);
+    // }, [dataSource]);
   }, []);
 
   useEffect(() => {
@@ -90,32 +94,31 @@ export default function UserList() {
   };
 
   const onUpdate = (user: User) => {
-    let cpy:any = dataSource.map(item=>{
-      if (item.id === currentUser.id){
+    let cpy: any = dataSource.map((item) => {
+      if (item.id === currentUser.id) {
         return {
-          key:currentUser.id,
-          id:currentUser.id,
-          username:user.username,
-          roleId:user.roleId,
-          region:user.region,
-          password:user.password,
-          default:item.default,
-          roleState:item.roleState
-        }
+          key: currentUser.id,
+          id: currentUser.id,
+          username: user.username,
+          roleId: user.roleId,
+          region: user.region,
+          password: user.password,
+          default: item.default,
+          roleState: item.roleState,
+        };
       }
-      return item
-    })
-    setDataSource(cpy)
+      return item;
+    });
+    setDataSource(cpy);
 
     // post到后段，生成id 再设置datasource，方便后面的删除和更新
     axios
-      .patch("http://localhost:8000/users/"+currentUser.id, {
+      .patch("http://localhost:8000/users/" + currentUser.id, {
         ...user,
-      }).catch(err=>{
-        console.log(err);
-        
       })
-    
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleOnSwitch = (item: User) => {
@@ -126,12 +129,27 @@ export default function UserList() {
     });
   };
 
-
   const columns: ColumnsType<User> = [
     {
       title: "区域",
       dataIndex: "region",
       key: "region",
+      filters: [
+        ...regionList.map((item) => ({
+          text: item.title,
+          value: item.value,
+        })),
+        {
+          text: "全球",
+          value: "全球",
+        },
+      ],
+      onFilter: (value, item) => {
+        if (value === "全球") {
+          return item.region === "";
+        }
+        return item.region === value;
+      },
       render: (region) => {
         return <b>{region === "" ? "全球" : region}</b>;
       },
@@ -174,11 +192,11 @@ export default function UserList() {
           <div>
             {/* 编辑键 */}
             <Button
-              disabled={user.roleId === 1}//超级管理员
+              disabled={user.roleId === 1} //超级管理员
               onClick={() => {
-                upfateFormRef.current.setOpen(true)
-                setCurrentUser(user)//全部信息
-                upfateFormRef.current.setCurrentUser(user)//可填写信息
+                upfateFormRef.current.setOpen(true);
+                setCurrentUser(user); //全部信息
+                upfateFormRef.current.setCurrentUser(user); //可填写信息
               }}
               type="primary"
               shape="circle"
@@ -201,7 +219,6 @@ export default function UserList() {
 
   return (
     <div>
-
       {/* 添加 */}
       <UserForm
         regionList={regionList}
@@ -211,13 +228,14 @@ export default function UserList() {
       />
       <Button
         type="primary"
-        onClick={() => {   
-          formRef.current.setOpen(true)
+        onClick={() => {
+          formRef.current.setOpen(true);
         }}
-      >添加用户
-      </Button> 
+      >
+        添加用户
+      </Button>
       {/* 更新用户 */}
-      <UserForm 
+      <UserForm
         regionList={regionList}
         roleIds={RoleIds}
         onSubmit={onUpdate}

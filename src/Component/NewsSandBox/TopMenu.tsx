@@ -1,31 +1,42 @@
 import { Avatar, Dropdown, Layout } from "antd";
-import React, { useState } from "react";
 import "../NewsSandBox/NewsSandBox.css";
+import type { MenuProps } from 'antd';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { inject, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import  {TodoStore} from "./Stores";
-import { observable } from "mobx";
+import { useNavigate } from "react-router-dom";
 
 function TopMenu({cstore}:{cstore:TodoStore}) {
   const { Header } = Layout;
-  // const [collapsed, setCollapsed] = useState(false);
-  // let collapsed = todoStore.collapsed.
-  // console.log(cstore);
-  
+  const ua = useNavigate()
 
   const handleOnCollasped = () => {
     cstore.setCollasped(!cstore.collasped)
-    // console.log(cstore.collasped)
   };
 
-  const items = [
+  const handleLogout = () =>{
+    localStorage.removeItem("token")
+    ua("/login")
+  }
+
+
+  const items:MenuProps['items'] = [
     { label: "超级管理员", key: "item-1" }, // 菜单项务必填写 key
-    { label: "退出", key: "item-2" },
+    { label: "退出", key: "item-2",danger: true,}
   ];
+  
+  const onClick: MenuProps['onClick'] = ({ key }) => {
+    switch (key){
+      case "item-2"://退出登陆
+        return handleLogout()
+    }
+  };
+
+
   return (
     <Header className="site-layout-background" style={{ padding: 0 }}>
       {cstore.collasped? (
@@ -35,7 +46,7 @@ function TopMenu({cstore}:{cstore:TodoStore}) {
       )}
       <div style={{ float: "right", padding: "0 24px" }}>
         <span>欢迎 Admin 回来    </span>
-        <Dropdown menu={{ items }}>
+        <Dropdown menu={{ items,onClick }}>
           <Avatar size="large" icon={<UserOutlined />} />
         </Dropdown>
       </div>
