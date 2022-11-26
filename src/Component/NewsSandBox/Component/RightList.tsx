@@ -151,7 +151,7 @@ export default function RightList() {
     <Table
       dataSource={dataSource}
       columns={columns}
-      pagination={{ pageSize: 3 }}
+      pagination={{ pageSize: 3 }} //每页3行
     ></Table>
   );
 }

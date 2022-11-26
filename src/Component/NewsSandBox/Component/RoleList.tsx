@@ -155,6 +155,7 @@ export default function RoleList() {
         dataSource={dataSource}
         columns={columns}
         rowKey={(item) => item.id}
+        pagination={{ pageSize: 3 }}
       ></Table>
 
       {/* // 树形- 权限 */}
