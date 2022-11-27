@@ -64,13 +64,11 @@ export default function UserList() {
   );
   const formRef = useRef(new fr()); // 连接跳出的表框
   const upfateFormRef = useRef(new fr()); // 连接跳出的表框
-  // const [roleTypeList, setRoleTypeList] = useState(Array<>)
 
   useEffect(() => {
     axios.get(`http://127.0.0.1:8000/users`).then((res) => {
       setDataSource(res.data as Array<User>);
     });
-    // }, [dataSource]);
   }, []);
 
   useEffect(() => {
