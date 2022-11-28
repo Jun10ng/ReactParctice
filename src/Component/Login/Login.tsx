@@ -1,10 +1,22 @@
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { Input, Checkbox, Button, Form } from "antd";
+import { Input, Checkbox, Button, Form, message } from "antd";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import './Login.css'
 
 export default function Login() {
+  const ug = useNavigate()
   const onFinish = (values: any) => {
     console.log("Received values of form: ", values);
+    axios.get(`http://localhost:8000/users?username=${values.username}&password=${values.password}&roleType=true&_expand=role`)
+    .then(res=>{console.log(res.data);
+      if(res.data.length === 0){
+        message.error("密码或用户名不匹配")
+      }else{
+        localStorage.setItem("token",JSON.stringify(res.data[0]))
+        ug("/")
+      }
+    })
   };
   return (
     <div style={{ background: "rgb(35,39,65", height: "100%" }}>

@@ -8,6 +8,7 @@ import axios from "axios";
 import { ItemType } from "rc-menu/lib/interface";
 import { inject, observer } from "mobx-react";
 import { TodoStore } from "./Stores";
+import { Right } from "./Component/RightList";
 
 // 从接口内取到的菜单配置
 interface MenuItem {
@@ -30,10 +31,10 @@ const iconMap = new Map([
 ]);
 
 // 转换 接口返回菜单数据 成 组件需要的格式
-const ConvMenuItem2ItemType = (arr: Array<MenuItem>): Array<any> => {
+const ConvMenuItem2ItemType = (arr: Array<MenuItem>,rights:Array<Right>): Array<any> => {
   let itemTypeList: Array<any> = new Array<any>();
   arr.forEach((item) => {
-    if (item.pagepermisson === 1) {
+    if (item.pagepermisson === 1 && rights.includes(item.key)) {
       itemTypeList.push({
         key: item.key,
         icon: iconMap.get(item.key),
@@ -42,7 +43,7 @@ const ConvMenuItem2ItemType = (arr: Array<MenuItem>): Array<any> => {
         children:
           !item.children || item.children.length === 0
             ? undefined
-            : ConvMenuItem2ItemType(item.children),
+            : ConvMenuItem2ItemType(item.children,rights),
       });
     }
   });
@@ -60,7 +61,7 @@ function SideMenu({ cstore }: { cstore: TodoStore }) {
   let defaultKey1 = "/" + pathList[1];
   let defaultKey2 = pathList[2] ? defaultKey1 + "/" + pathList[2] : "";
 
-  // console.log(defaultKey2)
+  const {role:{rights}} = JSON.parse(localStorage.getItem("token")||'{}')
 
   const handleOnMenuClick = (item: MenuInfo) => {
     console.log("click side menu and skip to", item.key);
@@ -71,7 +72,7 @@ function SideMenu({ cstore }: { cstore: TodoStore }) {
     let menuItems: Array<MenuItem>;
     axios.get("http://127.0.0.1:8000/rights?_embed=children").then((res) => {
       menuItems = res.data as Array<MenuItem>;
-      setItemTypeList(ConvMenuItem2ItemType(menuItems));
+      setItemTypeList(ConvMenuItem2ItemType(menuItems,rights));
       // console.log("=====")
     });
   }, []);

@@ -23,9 +23,10 @@ function TopMenu({cstore}:{cstore:TodoStore}) {
     ua("/login")
   }
 
+  const {role:{roleName},username} = JSON.parse(localStorage.getItem("token")||'{}')
 
   const items:MenuProps['items'] = [
-    { label: "超级管理员", key: "item-1" }, // 菜单项务必填写 key
+    { label: roleName, key: "item-1" }, // 菜单项务必填写 key
     { label: "退出", key: "item-2",danger: true,}
   ];
   
@@ -36,7 +37,7 @@ function TopMenu({cstore}:{cstore:TodoStore}) {
     }
   };
 
-
+  
   return (
     <Header className="site-layout-background" style={{ padding: 0 }}>
       {cstore.collasped? (
@@ -45,7 +46,7 @@ function TopMenu({cstore}:{cstore:TodoStore}) {
         <MenuFoldOutlined className="trigger" onClick={handleOnCollasped} />
       )}
       <div style={{ float: "right", padding: "0 24px" }}>
-        <span>欢迎 Admin 回来    </span>
+        <span>欢迎 {username} 回来    </span>
         <Dropdown menu={{ items,onClick }}>
           <Avatar size="large" icon={<UserOutlined />} />
         </Dropdown>
