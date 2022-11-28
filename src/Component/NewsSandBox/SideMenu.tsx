@@ -31,7 +31,7 @@ const iconMap = new Map([
 ]);
 
 // 转换 接口返回菜单数据 成 组件需要的格式
-const ConvMenuItem2ItemType = (arr: Array<MenuItem>,rights:Array<Right>): Array<any> => {
+const ConvMenuItem2ItemType = (arr: Array<MenuItem>,rights:Array<string>): Array<any> => {
   let itemTypeList: Array<any> = new Array<any>();
   arr.forEach((item) => {
     if (item.pagepermisson === 1 && rights.includes(item.key)) {
@@ -62,7 +62,7 @@ function SideMenu({ cstore }: { cstore: TodoStore }) {
   let defaultKey2 = pathList[2] ? defaultKey1 + "/" + pathList[2] : "";
 
   const {role:{rights}} = JSON.parse(localStorage.getItem("token")||'{}')
-
+  console.log(rights)
   const handleOnMenuClick = (item: MenuInfo) => {
     console.log("click side menu and skip to", item.key);
     ug(item.key);
