@@ -7,7 +7,6 @@ import './Login.css'
 export default function Login() {
   const ug = useNavigate()
   const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
     axios.get(`http://localhost:8000/users?username=${values.username}&password=${values.password}&roleType=true&_expand=role`)
     .then(res=>{console.log(res.data);
       if(res.data.length === 0){

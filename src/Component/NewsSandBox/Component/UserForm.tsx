@@ -9,12 +9,18 @@ interface CollectionCreateFormProps {
   roleIds:Array<string>;
   onSubmit:(user: User) => void;
   cRef:any;
+  currentUserRoleId:number
+}
+
+interface OptionItemType{
+  label: any, 
+  value: any,
 }
 
 function UserForm(props:CollectionCreateFormProps){
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false)
-  const {regionList,roleIds,onSubmit,cRef} = props
+  const {regionList,roleIds,onSubmit,cRef,currentUserRoleId} = props
   const [isGlobalAdmin, setIsGlobalAdmin] = useState(false)
   const [currentUser, setCurrentUser] = useState()
     // UserForm不是一个dom对象，所以没有常规的ref属性，所以构造一个current，暴露setopen方法给父组件调用
@@ -33,6 +39,15 @@ function UserForm(props:CollectionCreateFormProps){
     setOpen(false)
   }
   
+  const getOperatiableRoleIds = (currentUserRoleId:number):Array<OptionItemType> =>{
+    let allRoleIds = roleIds.map((item,idx) => (
+      { label: item, value: idx+1}))
+    if (currentUserRoleId == 1){
+      return allRoleIds
+    }
+    return allRoleIds.filter(item=>{return !(item.value<=currentUserRoleId)})
+  }
+  const operatiableRoleIds = getOperatiableRoleIds(currentUserRoleId)
 
   return (
     <div>
@@ -46,7 +61,6 @@ function UserForm(props:CollectionCreateFormProps){
         form
           .validateFields()
           .then((user) => {
-            console.log(user)
             onSubmit(user);
             // form.resetFields();
             setOpen(false)
@@ -89,7 +103,7 @@ function UserForm(props:CollectionCreateFormProps){
                 region:""
               })
             }
-          } options={roleIds.map((item,idx) => ({ label: item, value: idx+1}))}></Select>
+          } options={operatiableRoleIds}></Select>
         </Form.Item>
 
         <Form.Item 

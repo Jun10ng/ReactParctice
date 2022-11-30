@@ -65,15 +65,37 @@ export default function UserList() {
   const formRef = useRef(new fr()); // 连接跳出的表框
   const upfateFormRef = useRef(new fr()); // 连接跳出的表框
 
+  const { roleId, region, username } = JSON.parse(
+    localStorage.getItem("token") || "{}"
+  );
+
+  // 检查当前用户是否有权限更新目标用户
+  const checkDisable = (targetUser: User, currentRoleId:number): boolean => {
+    return targetUser.roleId < currentRoleId
+  };
+
   useEffect(() => {
     axios.get(`http://127.0.0.1:8000/users`).then((res) => {
-      setDataSource(res.data as Array<User>);
+      let accesiableUsers = res.data as Array<User>;
+      if (roleId !== 1) {
+        // 不是超级管理员则是区域管理，返回自己和相同区域的人
+        accesiableUsers = accesiableUsers.filter(
+          (item) => item.username === username || item.region === region
+        );
+      }
+      setDataSource(accesiableUsers);
     });
   }, []);
 
   useEffect(() => {
     axios.get(`http://127.0.0.1:8000/regions`).then((res) => {
-      setRegionList(res.data as Array<Region>);
+      let accesiableRegions = res.data as Array<Region>
+      if (roleId!==1){
+        accesiableRegions = accesiableRegions.filter(
+          (item)=>item.value ===region
+        );
+      }
+      setRegionList(accesiableRegions);
     });
   }, []);
 
@@ -190,7 +212,7 @@ export default function UserList() {
           <div>
             {/* 编辑键 */}
             <Button
-              disabled={user.roleId === 1} //超级管理员
+              disabled={checkDisable(user,roleId)} //超级管理员
               onClick={() => {
                 upfateFormRef.current.setOpen(true);
                 setCurrentUser(user); //全部信息
@@ -222,6 +244,7 @@ export default function UserList() {
         regionList={regionList}
         roleIds={RoleIds}
         onSubmit={onCreate}
+        currentUserRoleId={roleId}
         cRef={formRef}
       />
       <Button
@@ -238,6 +261,7 @@ export default function UserList() {
         roleIds={RoleIds}
         onSubmit={onUpdate}
         cRef={upfateFormRef}
+        currentUserRoleId={roleId}
       />
 
       <Table
