@@ -23,7 +23,7 @@ function TopMenu({cstore}:{cstore:TodoStore}) {
     ua("/login")
   }
 
-  const {role:{roleName},username} = JSON.parse(localStorage.getItem("token")||'{}')
+  const {role:{roleName},username} = JSON.parse(localStorage.getItem("token")||'{"role":{"roleName":null},"username":null}')
 
   const items:MenuProps['items'] = [
     { label: roleName, key: "item-1" }, // 菜单项务必填写 key

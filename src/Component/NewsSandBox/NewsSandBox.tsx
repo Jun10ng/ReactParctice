@@ -1,6 +1,6 @@
 import { Breadcrumb, Layout } from "antd";
 import React, { useEffect } from "react";
-import { useNavigate, useRoutes } from "react-router-dom";
+import { RouteObject, useNavigate, useRoutes } from "react-router-dom";
 import NoPermission from "../NoPermission";
 import Category from "./Component/Category";
 import Draft from "./Component/Draft";
@@ -14,9 +14,9 @@ import TopMenu from "./TopMenu";
 import "./NewsSandBox.css";
 import { Provider } from "mobx-react";
 import store from "./Stores";
+import RouteAuth from "./RouteAuth";
 
-const SandBoxRoutes = () => {
-  return useRoutes([
+const sandBoxRoutes = [
     {
       path: "/",
       element: <Home />,
@@ -28,6 +28,10 @@ const SandBoxRoutes = () => {
     {
       path: "/user-manage/list",
       element: <UserList />,
+      meta:{
+        auth:true,
+        unRoleIds:[999]
+      }
     },
     {
       path: "/right-manage/role/list",
@@ -49,7 +53,9 @@ const SandBoxRoutes = () => {
       path: "*",
       element: <NoPermission />,
     },
-  ]);
+  ]
+const SandBoxRoutes = () => {
+  return useRoutes(sandBoxRoutes);
 };
 
 export default function NewsSandBox() {
@@ -62,25 +68,27 @@ export default function NewsSandBox() {
   
   return (
     // <Provider {...stores}>
-      <Layout>
-        <SideMenu cstore={store}/>
-        {/* <Layout style={{height:'100%'}}> */}
-        <Layout className="site-layout">
-          {/* <TopMenu store={store}/> */}
-          <TopMenu cstore={store}/>
-          <Content
-            className="site-layout-background"
-            style={{
-              margin: "24px 16px",
-              padding: 24,
-              minHeight: 280,
-              height: "100%",
-            }}
-          >
+    <Layout>
+      <SideMenu cstore={store} />
+      {/* <Layout style={{height:'100%'}}> */}
+      <Layout className="site-layout">
+        {/* <TopMenu store={store}/> */}
+        <TopMenu cstore={store} />
+        <Content
+          className="site-layout-background"
+          style={{
+            margin: "24px 16px",
+            padding: 24,
+            minHeight: 280,
+            height: "100%",
+          }}
+        >
+          <RouteAuth routes={sandBoxRoutes}>
             <SandBoxRoutes />
-          </Content>
-        </Layout>
+          </RouteAuth>
+        </Content>
       </Layout>
+    </Layout>
     // </Provider>
   );
 }
