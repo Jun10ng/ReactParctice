@@ -24,7 +24,8 @@ export default function RoleList() {
   const [currentId, setCurrentId] = useState(-1)
   const [isModalOpen, setIsModalOpen] = useState(false); //image.png控制权限modal是否展示
   
-
+  console.log("enter role list");
+  
   const columns: ColumnsType<Role> = [
     {
       title: "ID",
