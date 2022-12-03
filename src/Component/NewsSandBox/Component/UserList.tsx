@@ -77,7 +77,7 @@ export default function UserList() {
   
 
   useEffect(() => {
-    axios.get(`http://127.0.0.1:8000/users`).then((res) => {
+    axios.get(`/users`).then((res) => {
       let accesiableUsers = res.data as Array<User>;
       if (roleId !== 1) {
         // 不是超级管理员则是区域管理，返回自己和相同区域的人
@@ -90,7 +90,7 @@ export default function UserList() {
   }, []);
 
   useEffect(() => {
-    axios.get(`http://127.0.0.1:8000/regions`).then((res) => {
+    axios.get(`/regions`).then((res) => {
       let accesiableRegions = res.data as Array<Region>
       if (roleId!==1){
         accesiableRegions = accesiableRegions.filter(
@@ -104,7 +104,7 @@ export default function UserList() {
   const onCreate = (user: User) => {
     // post到后段，生成id 再设置datasource，方便后面的删除和更新
     axios
-      .post("http://localhost:8000/users", {
+      .post("/users", {
         ...user,
         roleState: true,
         default: true,
@@ -146,7 +146,7 @@ export default function UserList() {
   const handleOnSwitch = (item: User) => {
     item.roleState = !item.roleState;
     setDataSource([...dataSource]);
-    axios.patch(`http://127.0.0.1:8000/users/${item.id}`, {
+    axios.patch(`/users/${item.id}`, {
       roleState: item.roleState,
     });
   };

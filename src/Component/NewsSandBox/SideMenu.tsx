@@ -74,7 +74,7 @@ function SideMenu({ cstore }: { cstore: TodoStore }) {
 
   useEffect(() => {
     let menuItems: Array<MenuItem>;
-    axios.get("http://127.0.0.1:8000/rights?_embed=children").then((res) => {
+    axios.get("/rights?_embed=children").then((res) => {
       menuItems = res.data as Array<MenuItem>;
       setItemTypeList(ConvMenuItem2ItemType(menuItems,rights));
       // console.log("=====")

@@ -82,7 +82,7 @@ export default function RoleList() {
   const { confirm } = Modal;
 
   useEffect(() => {
-    axios.get(`http://127.0.0.1:8000/roles`).then((res) => {
+    axios.get(`/roles`).then((res) => {
       setDataSource(res.data as Array<Role>);
     });
 

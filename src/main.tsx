@@ -5,10 +5,7 @@ import Login from './Component/Login/Login'
 import NewsSandBox from './Component/NewsSandBox/NewsSandBox'
 import Other from './Component/Other'
 import 'antd/dist/reset.css';
-import { Provider } from 'mobx-react'
-import stores from './Component/NewsSandBox/Stores'
-import RouteAuth from './Component/NewsSandBox/RouteAuth'
-
+import "./utils/http"
 const mainRoute:RouteObject[] =[
   {
     path:"/*",
