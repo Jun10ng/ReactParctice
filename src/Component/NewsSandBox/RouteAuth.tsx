@@ -24,9 +24,7 @@ const RouteAuth:React.FC<RouteAuthProps>= ({children,routes})=>{
   const ug = useNavigate()
   const location = useLocation()
   const matches = matchRoutes(routes,location)
-
-
-
+  
   useLayoutEffect(() => {
     if (location.pathname === '/login'){
       return 
@@ -45,7 +43,7 @@ const RouteAuth:React.FC<RouteAuthProps>= ({children,routes})=>{
       ug("/login")
     }
 
-    
+
     let haveRight:boolean = false
     const {roleId} = JSON.parse(userInfo||'{roleId:-1}')
     async function checkRight(){
@@ -56,7 +54,7 @@ const RouteAuth:React.FC<RouteAuthProps>= ({children,routes})=>{
         haveRight = curRole.rights.includes(location.pathname) || location.pathname === '/' 
       }()
       if (!haveRight){
-        ug('/')
+        // ug('/')
         message.info("you have no right to visit page: "+location.pathname)
       } 
     }

@@ -73,6 +73,8 @@ export default function UserList() {
   const checkDisable = (targetUser: User, currentRoleId:number): boolean => {
     return targetUser.roleId < currentRoleId
   };
+  console.log("enter user list");
+  
 
   useEffect(() => {
     axios.get(`http://127.0.0.1:8000/users`).then((res) => {

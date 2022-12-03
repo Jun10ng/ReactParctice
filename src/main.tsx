@@ -28,13 +28,11 @@ const RootRouter = () => {
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  // <React.StrictMode>
+  <React.StrictMode>
     <BrowserRouter>
-    <RouteAuth routes={mainRoute}>
         <RootRouter />
-    </RouteAuth>
     </BrowserRouter>
-  // </React.StrictMode>
+  </React.StrictMode>
 )
 
 
